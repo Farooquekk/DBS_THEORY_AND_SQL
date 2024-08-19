@@ -1,0 +1,89 @@
+=>Database Objects:
+		->Tables
+		->Views
+		->Indexes
+		->Sequences
+		->Synonyms
+
+=>Data Definition Language:
+		Define, Create,  Update the structures of the objects in the database
+=>Data manipulation language:
+		Used to manipulate the data inside the database objects
+
+Note: DDL Queries can't be undone.
+There are 2 ways of creating a table...
+=>Creating a Table:
+
+	->Creates an empty table:
+		Using the CREATE TABLE table_name(
+			columnName dataType,
+			columnName dataType,
+			......
+		);
+	->Using subQueries:
+		Creates a table and also puts data in it fetching data from an existing table.
+	CREATE TABLE employees As(SELECT empNo, empName FROM emp);
+
+		Create Table employee(empId int, employeeName varchar(255)) As(SELECT empNo, empName FROM emp);
+
+->Table Naming Conventions:
+		->Always start with a letter a-z / A-Z
+		->Can contain numbers and underscores
+		->Can be in any Case
+		->Can be upto 30 characters long
+		->Can't use the same name as existing Database Objects
+		->Must not be any sql reserved keyword
+
+->Datatypes:
+		int
+		float
+		varchar
+		char
+		varchar2
+		Date
+
+=>ALTER TABLE COMMAND:
+	->ADD:
+		To add or drop a column in a table.
+		ALTER TABLE table_name
+		ADD (columnName data_type[default value]);
+
+		This column would be added at the end...
+
+	->If we want to add at the first place or after any specific column, we write it like:
+	//Will add the column after employeeNo column
+	ALTER TABLE employee
+	ADD (sal int 0) AFTER employeeNo;
+
+	ALTER TABLE employee
+	ADD (sal int 0) FIRST;
+	
+	->MODIFY:
+		Used to modify datatype and constraints
+		ALTER TABLE table_name
+		MODIFY (columnName datatype[default] [constraint]);
+
+	->Drop COMMAND:
+		ALTER TABLE table_name
+		DROP COLUMN column_name;
+
+	->Rename Column:
+		ALTER TABLE table_name
+		RENAME COLUMN (oldName TO newName);
+
+	->Rename Table:
+		ALTER TABLE table_name
+		RENAME TO new_table_name;
+
+	->Truncate Table:
+		It is used to wipe out the data in the table and keeps the structure of the table.
+		TRUNCATE TABLE table_name;
+
+	->DROP TABLE:
+		It is used to delete the entire table.
+		DROP TABLE table_name;
+		
+
+
+	
+		
