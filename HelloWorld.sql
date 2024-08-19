@@ -1,1 +1,2 @@
-SELECT 'Hello, World!' AS greeting;
+SELECT 'Hello, World! And Hello Visitor!' AS greeting;
+
