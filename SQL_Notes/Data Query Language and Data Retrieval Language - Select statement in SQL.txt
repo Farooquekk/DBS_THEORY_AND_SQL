@@ -1,0 +1,562 @@
+SQL = Structured Query Language
+
+	->SQL consists of DDL, DML, DCL
+
+Writing SQL Commnands:
+	->Writing all keywords in Capitalised Case i.e. SELECT, FROM, WHERE
+
+=>select statement in SQL:
+	->Used to retrieve inofrmation
+	->comes in DQL / DRL
+	->performs projection, selection and joining.
+
+=>Projection:
+	select desired columns from database
+=>selection:
+	select desired rows from database
+=>joining:
+	select joins/combines multiple tables
+
+=>Syntax of Select Statement:
+	select [distinct/unique] (*,column_name[As"alias"], arithmetic expression) from table_name [where condition]
+	[Group by group_by_expression]
+	[Having group_condition]
+	[Order by column_name];
+
+[] = Optional
+alias = alternative temporary name of column for showing in query's output.
+ex. select name, age+2 As"age after 2 years" from student;
+where (As) is optional
+
+->Basic select: 
+		select statement must have the select and from clause.
+
+Work:
+select dept_no from employee;
+select name, salary, salary*12 As "Annual Salary" from employee
+
+DISTINCT Keyword:
+	Used to retrieve distinct information from a table
+SELECT DISTINCT * FROM customers;
+
+
+Where Clause:
+	where keyword condition
+
+	<
+	>
+	<=
+	>=
+	=
+	!=
+	LIKE => Regex(Regular Expression) [0-9]{5}-[0-9]{7}-[0-9]{1}
+	BETWEEN Range
+	IN two or more numbers
+	
+ISNULL ISNOTNULL BETWEEN NOTBETWEEN
+
+Q: Display employees hired between 01-Jan-20 and 01-Jan-24
+A: select * from emp where hiring_date between '01-Jan-20' AND '01-Jan-24'
+
+For MS ACCESS:
+SELECT * FROM teacher WHERE hiringDate BETWEEN #01/01/2023# AND #01/01/2024#;
+
+Q: Display the name, job title and  commission of all employees who are not entitled to get a commission.
+A: select emp_name, jTitle, commission from emp where commission ISNull or commission=0 or commission=" ";
+
+LIKE OPERATOR: Comparing Data with Regular Expressions(Regex)
+What is a regex:
+		A common(general) expression used to represent pattern of a data.
+In database we use % and _ to create regular expressions
+% -> Represents a sequence of Characters
+_ -> Represents single characters
+
+Q: Display all employees whose name starts with s
+A: select * from emp where name LIKE 's%';
+
+Q: Display all employees whose name starts with a and ends with b
+A: select * from emp where name LIKE 'a%b';
+
+
+Q: Names have 2nd Character A
+A: select * from emp where name LIKE '_a%';
+
+Q: Display the list of employees where salary doesn't lie between 500 and 10,000
+A: select * from emp where sal NOTBETWEEN 500 AND 10000
+
+Q: Display employee number of all employees who joined in the year 2023
+A: select emp_no from emp where joiningDate LIKE '%23';
+
+Q: Display names of employees whose second last character of the name is E
+A: select name from emp where name LIKE '%E_';
+
+
+
+=>What to do if we want to search the wildcards themselves (%, _ )
+	->We use Escape Sequences with a backward Slash
+		Example: SELECT sal FROM emp WHERE name LIKE '%AB\_%';
+
+SELECT * FROM Customers WHERE CustomerName LIKE "%\'%";
+SELECT * FROM Customers WHERE CustomerName LIKE '%''%;'
+
+=>In Operator
+
+Q: Display employee number and manager number of employees agha and arbab
+A: SELECT empname, managerNumber from emp WHERE empname="AGHA" OR empname="ARBAB"; 
+	or we can write it as
+   SELECT empname, managerNumber from emp WHERE empname IN ('AGHA', 'ARBAB');
+
+=>Orderby Clause
+
+	->orderby column_name/expression/columnalias[ASC/DESC];
+	->Always the last clause in SELECT statement used for sorting output rows.
+	->The columns in select can be different from orderby clause if distinct clause is not used.
+	->If distinct clause is used the orderby column should be in select statement
+	->In ascending order, NULL values are displayed at last and vice versa.
+	->Default sort order is ascending.
+	->Multiple columns can be used for sorting
+
+Q: Display all Employees data and sort it in ascending order of their hiringDate.
+A: SELECT * FROM emp ORDER BY hiringDate ASC; SELECT * FROM emp ORDER BY hiringDate DESC;
+
+Q: Display employee number and salary of all employees. Sort the results by ascending of Annual Salary.
+A: SELECT OrderId, Quantity*12 As 'Annual Quantity' from OrderDetails ORDER BY Quantity*12 DESC;
+
+Q: Display name, deptNo and Salary of all employees and sort the result according to dept no and desc order of the salary
+A: SELECT empname, deptNo, sal FROM emp ORDER BY deptNo, sal DESC;
+	SELECT OrderId, Quantity*12 As 'Annual Quantity' from OrderDetails ORDER BY Quantity*12 DESC, OrderId ASC;
+
+Priority of Sorting is given to first column
+
+Q: Display the jobTitle and monthlySalary of All Employees whose jobTitle contains the String "MAN" and they earns more than 10,000 dollars
+
+A: SELECT jobTitle, monthlySalary from emp where jobTitle LIKE '%MAN%' AND sal>10000;
+
+
+Q: Display the names and dept numbers of all employees who are in dept 20 and 30. Sort the results in Ascending Order of Employee names
+
+A: SELECT empName, deptNo FROM emp WHERE dept IN (20,30) ORDER BY empName;
+
+Q: Display the list of Employees who have an A and E in their names.
+
+A: SELECT * FROM emp WHERE empName LIKE %A%E%;
+   SELECT * FROM emp WHERE empName LIKE %A% AND empName LIKE %E%;
+
+Q: Display the name and job title of employees who do not have a manager.
+
+A: SELECT empName, jTitle FROM emp WHERE manager=NULL;
+   SELECT empName, jTitle FROM emp WHERE manager IS NULL;
+
+
+=>Functions in SQL:
+	->Single Row Functions: Number of Inputs = No of Outputs
+	Select lower(empName), sal, hiringDate from emp;
+
+It will output the empName as lower(empName), in order to change that we can use Alias
+
+	SELECT LOWER(empName) AS 'empName', sal, hiringDate FROM emp;
+	
+
+Q: Display the name of employees with first letter capital and all others small and length of their names for all employees whose names start with j, a and m . Give appropriate labels to the columns.
+
+A: SELECT initCap(empName) AS 'empName', length(empName) AS 'Name's Length' FROM emp WHERE empName LIKE 'j%' OR empName LIKE 'a%' OR empName LIKE 'm%';
+
+->CONCAT:
+	SELECT CONCAT("SQL ", "Tutorial ", "is ", "fun!") AS 'ConcatenatedString';
+	SELECT CONCAT(firstName, lastName) As 'Full Name' from emp;
+	SELECT CONCAT(firstName," ", lastName) As 'Full Name' from emp; // Not possible in Oracle, instead use nested concat
+->Substr(c,p,l) contains 3 arguements
+c = column/string -> from where we want to extract
+p = starting position
+l = length
+
+Software
+Index starts from 1
+e.g. SELECT Substr(empNo, 1, 2) AS 'empNo' FROM emp;
+
+SELECT Substr("Arbab", 3, 3) As 'Name';
+SELECT empNo, Substr(empNo, 1, 3) As '1', Substr(empNo, 0, 3) As '2' FROM emp;
+
+	->For Negative numbers, start from right to left i.e. backwards
+
+SELECT empNo, Substr(empNo, -3, 2) As '1', Substr(empNo, 5, 2) As '2' FROM emp;
+
+Example:
+PostalCode
+12209
+05021
+05023
+1. SELECT Substr(PostalCode, -3, 2) FROM Customers
+Output:
+20
+02
+02
+
+1. SELECT Substr(PostalCode, 0, 2) FROM Customers
+Output:
+		->EMPTY
+
+1. SELECT Substr(PostalCode, -6, 2) FROM Customers
+Output:
+	->EMPTY
+   
+1. SELECT Substr(PostalCode, 6, 2) FROM Customers
+Output:
+	->EMPTY
+
+NOTE: 0 Based indexing doesn't work in SQL.
+
+=>Lpad Function:
+		Used to increase the length of the characters artificially...
+	Syntax:	
+		Lpad(c, l, s)
+	c = column/ character string
+	l = length of the final ouput string
+	s = padding string ( What to put )
+
+Example: SELECT ename from Lpad(empNo, 10, *) As 'Padded Column' FROM emp;
+Example: SELECT *, Rpad(CustomerName, 30, "&") As 'Padded Name' FROM Customers;
+
+=>Ltrim, Rtrim Function:
+		->Used to trim data....
+	Ltrim:
+		Ltrim(c,s);
+		c = the column or string from where you want to delete
+		s = the string that you want to delete from that column
+	Example:
+		SELECT ename, Ltrim(empJob, "Sales") FROM emp where empJob ="Salesman";
+Rtrim is the same as Ltrim, just it trims from the right side and if the provided string isn't at the left then nothing will happen....
+
+=>replace function:
+		Used to replace the data.
+		SELECT replace(c, s, r)
+		c = column/ string
+		s = the characters you want to remove
+		r = what do u want to replace those characters with
+
+#SELECT Substr(PostalCode, -3, 2) FROM Customers;
+#SELECT * FROM Customers;
+#SELECT *, Lpad(CustomerName, 30, "&") As 'Padded Name' FROM Customers;
+#SELECT *, replace(Country, "man", "") FROM Customers;
+
+
+Q: Write a query to display the name and salary of all employees. Format the salary  by 15 characters left padded by $ sign. Label the column as formatted salary
+
+	SELECT empName, Lpad(empSal, 15, '$') As 'Formatted Salary' FROM emp;
+
+
+	=>Numeric Data Functions: Task to do
+			
+=>dual table:
+
+		Dummy table in SQL containing only one row and one column...
+		We can use the dual table for self written values in functions
+
+=>Date Functions (Oracle):
+		1. Months_between(date1, date2)
+		example: SELECT months_between (sysdate, hiredate) FROM emp;
+			where sysdate = current date of the system
+		2. add_months(date, months) where months = number of months to add
+			SELECT add_months(hireDate, 12) FROM emp;
+				// On which date employee would have completed one year 
+		3. next_day(date, 'character') where character = Day of week
+			SELECT next_day('23-02-24' , 'Friday') FROM dual;
+					// After how many days from 23rd feb will friday come
+		4. last_day(date) = guesses last date of month
+			SELECT last_day ('23-02-2024') FROM dual;
+					// Outputs the last day of the current date
+
+
+=>Miscellaneous functions:
+		1. nvl(x,y) // if x is null, replace it with y
+
+		2. nvl2(x,y,z) if x is null, replace with z, else replace with y arguement
+	Both of them are used to handle null values
+	Q: Calculate the gross pay of all employees
+		SELECT ename, (sal + nvl(comm, 0)) As 'Gross Pay' FROM emp;
+			// comm = commision is the column which may hold empty values
+
+	SELECT nvl2(comm, sal + comm, Sal) As 'Gross Pay' FROM emp;
+
+
+
+=>To-Char:
+				Used to write the date in a certain format...
+		SELECT to-char(sysdate, 'DD MON YYYY') FROM dual;
+		Output: 27 Feb 2024
+
+
+Available Formats:
+	Month				Month Spelled Out					February
+	MON				3 Letter abr of Month				Feb
+	MM				2 digit numerical value				02
+	RM					Roman Numeral of the month		II
+	D					Numerical Value of day of week		2(Tuesday)
+	DD					Numerical Value of day of month		27
+	DDD				Numerical value of day of year		365 -> Dec 31
+	DAY					Name of Day						Tuesday
+	Dy					3 letter abbreviation of day			Tue
+	YYYY				4 digit year							2024
+	YYY, YY or Y			3,2,1 digit year						024, 24, 4
+	YEAR				Year Spelled Out						Two Thousand Twenty Four
+	AD or BC			Shows AD or BC Year					2024AD
+
+	SP					Spells Out The Day					DDSP = Twenty Seven
+	TH					Ordinal								DDth = 27th
+	SPTH				Spelled Ordinal						DDSPTH = Twenty Seventh
+
+Time Formats:
+	SS					Seconds								0-59
+	MI					Minutes								0-59
+	HH12				12 Hr Format						0-12
+	HH24				24 Hr Format						0-24
+
+
+SELECT to-char(sysdate, 'DDth "Of" MON,  YYYY') FROM dual;  --27th of Feb, 2024
+SELECT to-char(sysdate, 'DD MONTH, YEAR') FROM dual; --27 February, Two Thousand Twenty Four
+
+
+Q: Display the increased salary of employees based on their job titles, for analysts 10%, clerks 15% and managers 20%...
+	Could be done in two ways:
+		First with 3 select statements.
+		SELECT (sal+(sal*0.1)) As 'Increased Salary' FROM emp WHERE jobTitle = "Analysts";
+		.................
+		................
+
+		Or we can do in one decode statement
+		decode(column name, 1stcondition, return this, 2ndcondition, return this, 3rdcondition, return this, default if no condition matches)
+		SELECT empName, decode(job, "Analyst", sal+(sal*0.1), "Clerk", sal+(sal*0.15), "Manager", sal+(sal*0.2), sal) As 'Increased Salary' FROM emp;
+	
+=> Multiple Row Functions:
+		Gives single output for multiple rows in absence of group by clause
+		or
+		With GROUPBY clause, gives single output for a group
+
+		Example: 50 rows -> 1 output
+				 50 rows (5 groups) -> 5 Outputs
+
+->Some multiple row functions are:
+			-> min()
+			-> max()
+			-> count()
+			-> avg()
+			-> sum()
+		
+Q: Display the Senior and Junior Employees in emp
+	-> SELECT  min(hireDate) As 'Senior', max(hireDate) As 'Junior' FROM emp;
+
+Q: Count the number of employees in dept#30.
+	->SELECT count(empName) As 'Total Number of Employees in Dept # 30' FROM emp WHERE dept = 30; 
+
+Q: Display Average, Highest, Lowest and sum of monthly salary of all sales people...
+	->SELECT avg(sal) As 'Average Salary', max(sal) As 'Highest Salary', min(sal) As 'Lowest Salary', sum(sal) As 'Sum Of Salaries' 	FROM emp WHERE jobTitle="SalesMan"; // Or we can replace the where clause with jobTitle LIKE '%SALES%';
+
+=>Group By Clause:
+			->Used to form data groups
+			->If a group/ multiple row function is listed in select clasue, it must also be in the group by clause.
+			->Columns in group by clause is not necessary to be in select clause, if there is no multiple row function in select clause
+			->Columns alias cannot be used in group by clause.
+			->Result returned should be in ascending order
+
+Q: Display job and sum of salary for each job title excluding sales people and sort by total salary in decreasing order.
+
+	SELECT jobId, sum(empSal) FROM emp GROUP By(deptNo) WHERE jobId NOT LIKE %SALES% ORDER BY sum(empSal) desc;
+
+=>Having Clause:
+			->Used to restrict groups.
+			->Serves as WHERE clause for groups.
+
+Q: Display deptNo and maxSalary for those departments whose maximum salary is greater than 10,000
+A: SELECT deptNo, max(empSal) FROM emp GROUP BY  deptNo HAVING max(empSal) > 10000;
+
+Q: Display the jobId and total monthly salary for each job with a total salary exceeding 500, sort by monthly salary.
+A: SELECT jobId, sum(empSal) FROM emp GROUP BY(JobId) HAVING sum(empSal) > 500 ORDER BY sum(empSal);
+
+
+Q: Display the job id and total monthly salary for each job with a total salary exceeding 500. Sort by Total Monthly salary:
+
+		SELECT jobId, sum(empSal) FROM emp GROUP BY (jobId) HAVING sum(empSal)>500 ORDER By sum(empSal);
+
+Q: Display the maximum average salary for each department:
+		SELECT dept, max(avg(empSal)) FROM emp GROUP BY (dept);
+Q:Display the total salary being paid to each job title within each department:
+		SELECT jobId, dept, sum(empSal) FROM emp GROUP BY dept,  jobId;
+
+=>Subqueries:
+		Select statement inside another select statement. Useful to select rows from a table with a condition that depends on the data in the table itself. You can place subquery in where, having and from clause. Outerm query is main  query, inner query is sub query and always entered in parenthesis. Single row operators with single row subqueries and multiple row operators with multiple sub queries. Placed on RHS of comparison condition.
+SubQuery is always executed first.
+
+	->Types of SubQueries
+		1. Single Row SubQuery(One Row One Column)
+		2. Multiple Row SubQuery(Multiple Rows One Column)
+		3. Multiple Column SubQuery(Multiple Rows with Multiple Columns)
+		Inner SubQueries result will be used as input for the outer select statement....
+
+Q: Display the salary of all employees who earns more than SCOTT.
+		SELECT empSal FROM emp WHERE empSal>(SELECT empSal FROM emp WHERE empName LIKE "SCOTT") ;
+
+Q: Display employees whose job is same as that of employee 7428.
+
+		SELECT empName FROM emp WHERE empJob LIKE (SELECT jobID FROM emp WHERE empId=7428;);
+
+Q: Display employees who earn the same salary as maximum salary of each department...
+
+		SELECT empName FROM emp WHERE empSal IN (SELECT max(empSal) FROM emp GROUP BY dept;);
+
+Q: Display all departments that have minimum salary greater than dept number 20
+
+		SELECT dept, min(empSal) FROM emp GROUP BY dept, [min(empSal)] HAVING min(empSal)>(SELECT min(empSal) FROM emp WHERE dept=20;);
+
+
+	
+< , > , = , != can only be used to compare with only one value
+=>Multiple Row Subqueries:
+	-> IN OPERATOR
+	-> ALL:
+			->Greater Than All 	-> Greater than all values returned by SubQuery >ALL
+			->Less Than All		-> Less than all values returned by SubQuery <ALL
+	->ANY:
+			->Greater Than Any	-> Greater than the lowest value returned by SubQuery >ANY
+			->Less than Any		-> Lower than the highest value returned by SubQuery <ANY
+			->Equal to Any		-> Same as IN Operator =ANY/IN
+
+Q: Display the employees whose salary is greater than the average salary of all departments.
+
+A: SELECT * FROM emp WHERE empSal>ALL(SELECT avg(empSal) FROM emp GROUP BY deptNo;);
+
+Q: Display the employee names of all employees who work in the department with any employee whose name contains an 'A';
+
+A: SELECT empName FROM emp WHERE deptNo IN(SELECT deptNo FROM emp WHERE empName LIKE '%A%';)
+
+=>Multiple Column SubQueries:
+			->Two types of comparison in selecting columns.
+					1. Pairwise (Ordered Pair)
+					2. Non Pairwise(No Ordered Pair)
+
+Q: Display the orderNumber, product number and quantity in which the product number and quantity matches both the product number and quantity of an item in order no. 605. Exclude order 605 in result.
+->Pairwise Approach
+A: SELECT orderId, prId, qty FROM orders WHERE orderID!=605 AND (prId,qty) IN (SELECT prId, qty FROM orders WHERE orderId=605;);
+->Non Pairwise Approach:
+A: SELECT orderId, prId, qty FROM orders WHERE orderId!=605 AND prId IN(SELECT prId FROM orders WHERE orderId=605;) AND qty IN(SELECT qty FROM orders WHERE orderId=605;);
+
+
+=>Joins in SQL:
+	->A SQL join clause combines records from two or more tables in a database. A JOIN means for combining fields from two tables by using values common to each. Joins are used to combine data from two tables, with the result being a new, temporary table. The temporary table is created based on column(s) that the two tables share, which represent meaninful column(s) of comparison. The goal is to extract meaningful data from the resulting temporary table. Joins are performed based on something called a predicate, which specifies the condition to use to perform a join. A join can be eother an innter join or an outer join, depending on how one wants the resulting table to look.
+
+Types of JOINS:
+	->INNER JOIN
+	->OUTER JOIN
+
+=>INNER JOIN:
+			An INNER JOIN should be used when you only want to pull dat that exists in both tables.
+
+	->One type of INNER JOIN is Cartesian JOIN:
+			It returns the cross product of the matching rows from both the tables.
+	If table 1 has 4 rows, and table 2 has 3 rows, so the output table will have 4x3 = 12 rows
+
+Syntax of CARTESIAN JOIN:
+	Method 1: SELECT empName, deptNo FROM emp, dept; -> Traditional Method
+	Method 2: SELECT empName, deptNo FROM emp CROSS JOIN dept; -> JOIN Method
+
+	->Another type of inner join is EQUI-JOIN:
+			An EQUI join is an inner join statement that uses an equivalence operation (i.e. colA = colB) to match rows from different tables. the converse of an equi join is non equi join operation.
+
+->Syntax of EQUI JOIN:
+		Method 1: SELECT empName, deptName FROM emp, dept WHERE emp.deptNo = dept.deptNo;
+
+		Here if we write column deptNo with select statement that it will give an error because it can't identify either to retrieve deptNo of emp table or of dept table, Hence to resolve the problem of fetching the common columns in the traditional method, we use table alias as follows:
+
+		We give a name to the tables and use . to access the columns from those tables
+		SELECT e.empName, d.deptName FROM emp e, dept d WHERE e.deptNo=d.deptNo;
+
+There are 3 ways to write EQUI JOIN using JOIN keyword...
+
+	a)Natural JOIN:
+		SELECT ename, deptNo, deptName FROM emp NATURAL JOIN dept;
+		If a column column exists, it will do the equi join by itself else
+		If the common column doesn't exist, it will simply do default join i.e. Cross JOIN
+
+	b) With USING Clause:
+		It is used if several columns share the same name but you don't want to join all these common columns, The columns listed in the USING clause can't have any aliases in the statement, including the WHERE clause. Also it can't take a table alias...
+
+		SELECT empName, deptName, deptNo FROM emp JOIN dept USING (deptNo);
+
+	c) With ON Clause:
+		It is used to join tables where the column names don't match in both tables. Here we can use the table qualifier / aliases.
+
+		SELECT e.empName, d.deptName, d.deptNo FROM emp e JOIN dept d ON e.deptNo=d.deptNo;
+
+Q: Display the empNo, empName, deptNo, deptName of the employee KING;
+
+=>Traditional Method:
+		SELECT empNo, empName, deptNo, deptName FROM emp, dept WHERE emp.deptNo=dept.deptNo AND
+		empName="KING";
+		->Will return error | ambigious if a column is present in both the tables.
+
+=>with Table Alias:
+		SELECT e.empNo, e.empName, d.deptNo, d.deptName FROM emp e, dept d WHERE e.deptNo=d.deptNo AND empName="KING"; 
+
+Join Method:
+		=>Natural Join:
+		SELECT empNo, empName, deptNo, deptName FROM emp NATURAL JOIN dept WHERE empName="KING";
+
+		=>USING Clause:
+		SELECT empNo, empName, deptNo, deptName FROM emp JOIN dept USING (deptNo) WHERE 					empName="KING";
+
+		=>ON Clause:
+		SELECT e.empNo, e.empName, d.deptNo, d.deptName FROM emp e JOIN dept d ON e.deptNo=d.deptNo;
+
+
+=>Non EQUI JOIN:
+		Q: Display the grades of employees based on their salary excluding the low and high salary.
+	->Traditional:
+		SELECT empName, empSal, grade FROM emp, salgrade WHERE empSal BETWEEN losal AND hisal;
+	->JOIN Method:
+		SELECT empName, sal, grade from emp JOIN salgrade ON sal BETWEEN losal and hisal;
+10:01 AM 15-Mar-24:
+emp Table:	
+	empNo		empName		empJob		empSal		managerNo
+	1			abc				Clerk		15000		2
+	2			uvw			manager	50000		Null	
+	3			xyz				manager	50000		Null
+	4			Martin			clerk		15000		3	
+
+=>SELF JOIN: Does the same as Sub Query:
+	The SQL SELF JOIN is used to join a table to itself as if the table were two tables, temporarily renaming at least one table in the SQL statement. Sub-queries and self joins are substitutes for each other.
+
+Q: Find the name of Martin's Manager:
+
+		->Via Sub Query:
+				SELECT * FROM emp WHERE empNo=(SELECT managerNo FROM emp WHERE empName="Martin"); --xyz
+
+	|| "STRING HERE" || -> Used for concatenating strings
+		->SELF JOIN - Traditional Method:
+				SELECT e.empName || "Works For" || manager.empName FROM emp manager
+				WHERE e.mgr=manager.empNo AND e.empName="MARTIN";
+
+		->The JOIN Keyword method:
+				SELECT e.empName, manager.empName FROM emp e JOIN emp manager ON e.managerNo=manager.empNo WHERE e.empName="Martin";
+
+=>OUTER JOIN:
+			Inner Join always returns the matching data from both the tables. If there is no matching row in both tables, inner join won't be able to retrieve that. For retrieving that data, we use Outer JOIN
+The operator for outer join is + but it only works in Oracle
+	In other DBMS, we use JOIN Keywords to create outer join
+
+	Example:
+			SELECT e.empName, d.deptNo, d.deptName FROM emp e, dept d WHERE e.deptNo(+) = d.deptNo;
+
+	Right hand side + => Left Outer Join => Full data from right hand side
+	Left hand Side + => Right Outer Join => Full data from left hand side
+	There is another one named FULL Outer JOIN, we can't create it by traditional method, we have to use the JOIN Keyword. => Full data from both the sides.
+	FULL OUTER JOIN Keyword is available in Oracle only
+
+	Using JOIN Keyword:
+			SELECT e.empName, d.deptName FROM emp e RIGHT OUTER JOIN dept d ON e.deptNo=d.deptNo;
+
+	Using FULL OUTER JOIN:
+			SELECT e.empName, d.deptName FROM emp e FULL OUTER JOIN dept d ON e.deptNo=d.deptNo;
+
+Q: Display all information info of all employees from two tables emp, dept having unmatched data in both tables.
+	
+	SELECT e.*, d.* FROM emp e FULL OUTER JOIN dept d on e.deptNo=d.deptNo;
+	
