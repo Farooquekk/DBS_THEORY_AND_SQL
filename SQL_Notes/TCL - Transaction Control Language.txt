@@ -1,0 +1,18 @@
+Transaction Control Language:
+->Undo and Saves the DML Commands.
+
+	->COMMIT (Save)
+	->ROLLBACK (Undo Changes)
+
+=>Commits:
+		->IMPLICIT:
+				Auto Saving the DML Changes
+		->EXPLICIT:
+				It is done via entering commit at sql prompt
+
+	Sequence for Rolling Back:
+		INSERT
+		UPDATE
+		DELETE
+				All these statements will be rolled back (undone) iff there were no commits made to the db
+		After running one DDL statement, All the above DML statements will be saved automatically...
