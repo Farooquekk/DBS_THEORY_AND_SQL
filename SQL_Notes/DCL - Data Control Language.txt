@@ -1,0 +1,75 @@
+=>PRIVILEGES OR DCL (Data Control Language):
+
+	When multiple users can access database objects, authorisation can be controlled to these objects with privileges. Every object has an owner.
+
+
+	There are 2 types of Privileges:
+			->System Privileges:
+					->Alter Any Index
+					->Alter any Sequence
+					->Alter any Table
+					->Alter any View
+					->Create any Index
+					->Create any Sequence
+					->Create any Table
+					->Create any View
+			->Object Privileges
+
+	=>There must be one root user / sysdba (system administrator) which gives permissions to other users.
+
+
+		->Grant Keyword:
+				Used to give privileges to users.
+		->Revoke:
+				Used to revoke the granted privileges.
+
+		Syntax:
+System Privilege: ALL DDL COMMANDS
+			GRANT sys_privileges (available system privileges you want to give) to {username | Public | role_name} [WITH ADMIN]
+		With Admin means this user can give the privileges given to it to other users as well....
+		SELECT ANY TABLE
+Object Privilege: ALL DML COMMANDS
+			->DELETE
+			->INDEX
+			->INSERT
+			->REFERENCES
+			->SELECT
+			->UPDATE
+		Can Grant privileges to certain objects only...
+		GRANT privilege_name ON object_name TO {user_name |PUBLIC |role_name} [WITH GRANT OPTION];
+Process:
+		sys as sysdba
+		CREATE USER username IDENTIFIED BY password;
+		CONNECT username / password   => Connects the database to another existing user.
+		GRANT CREATE SESSION TO username; -> Is a must for the user to log in to database
+		Grant SELECT ANY TABLE to username;
+		GRANT SELECT ANY TABLE to username;
+		CONNECT username/password;
+		
+->Practice Questions:
+		1. Create a database user with your name and password as your roll number.
+			-- First login to the admin account
+			CREATE USER agharbab IDENTIFIED BY blueBoy
+		2. Grant all system privileges to the user such that he can pass those privileges on.
+			GRANT ALTER ANY INDEX, ALTER ANY SEQUENCE, CREATE TABLE,... TO agharbab WITH ADMIN OPTION;
+			GRANT SELECT ANY TABLE TO agharbab;
+			GRANT CREATE SESSION TO agharbab
+		3. Use the user account to display the details of all employees in the databse.
+			-- Login to the User Account // CONNECT username/password
+			CONNECT agharbab/blueBoy;
+			SELECT * FROM emp;
+
+Important Tasks: (Included in Exam
+		1. Find the difference between a user and role
+ 		2. If a column in the where condition is being used as foreign key in another table and a relationship of referential integrity exists then row from such a table can't be deleted. 
+
+
+	->Create a User and Assign object and system privileges.
+	/as sysdba 			-- Admin Login
+	CREATE USER talha IDENTIFIED by moulana;
+	GRANT SELECT ANY TABLE TO talha; / GRANT SELECT ON emp TO talha
+	CONNECT scott/tiger 		-- Supposing scott already exists
+	GRANT SELECT/INSERT		-- Wrong Query => Missing the [to username] part.
+	CONNECT talha/moulana
+	SELECT *  FROM emp;
+		
