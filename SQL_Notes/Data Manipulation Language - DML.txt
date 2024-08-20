@@ -1,0 +1,71 @@
+=>Data Manipulation Language:
+		->Used to insert, update, delete the data in the database objects.
+		->DML Queries can be undone
+
+=>INSERT Command:
+		Used to insert data in the database objects.
+
+=>Some points related to INSERT Command...
+		->Null Values:
+				If you want to give NULL  Values you can
+					Skip the column Name
+					Don't provide the column name
+					Write the keyword NULL.
+->Syntax:
+	->First approach
+		INSERT INTO table_name (columnNames....) 
+		Values( List of Values...);
+	->Second Approach:
+		INSERT INTO table_name
+		VALUES (list of values....);  -- The list of values must be in the same 										order as the order of columns in the table.
+	->Third Approach:
+		INSERT INTO Person (Id, Name)
+		VALUES
+    			(1, 'Amir' ),
+    			(2, 'Sofia'),
+    			(3, 'Aya'),
+    			(4, 'Mateo'),
+    			(5, 'Leila'),
+    			(6, 'Yara'),
+    			(7, 'Ndidi'),
+    			(8, 'Santiago');
+
+	If we want to insert the data in the table from another table, We can do that via using subquery as...
+		INSERT INTO table_name([list of columns]) (subquery);
+Example:
+		INSERT INTO dept30 (SELECT * FROM emp WHERE deptNo=30);
+			->Both tables must have the same sequence of columns.
+
+=>UPDATE Command:
+		It changes (updates) the data in an existing row
+->Syntax:
+		UPDATE table_name SET column_name = new_datavalue [WHERE condition];
+
+Example:
+		UPDATE emp SET empNo=8 WHERE empName='Martin';
+
+=>DELETE Command:
+		Deletes the existing rows.
+Syntax:
+		DELETE FROM table_name [WHERE condition];
+Example:
+		DELETE FROM emp WHERE empNo=18;
+->Notes on DELETION:
+		1. The statement will delete all the rows that satisfy the condition
+		2. if the where clause is omitted, delete removes all rows from the table.
+		3. If a column in the where condition is being used as foreign key in another table and a relationship of referential integrity exists then row from such a table can't be deleted. 
+Task: Find out how to delete such rows.
+
+=>Queries:
+Q: Write a query that updates employee 7698's Job and departmentNo to match that of employee 7499.
+
+A: UPDATE emp SET jobTitle, deptNo IN(SELECT jobTitle, deptNo FROM emp WHERE empNo=7499) WHERE empNo=7698;
+
+Q: Change the Department Number of all employees with the same job as employee 7788 to the current department of employee 7788.
+	UPDATE emp SET deptNo IN(SELECT deptNo FROM emp WHERE deptNo=7788) WHERE jobTITLE IN (SELECT jobTitle FROM emp WHERE empNo=7788);
+		
+Q: Write DDL to create the following structure
+	
+	CREATE TABLE 
+
+	
